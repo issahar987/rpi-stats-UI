@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import ProgressBar from "./ProgressBar";
+import HardwareBox from "./HardwareBox";
 
 function SystemInfo() {
     const [systemInfo, setSystemInfo] = useState(null);
@@ -31,18 +32,71 @@ function SystemInfo() {
     }, [time]);
 
     if (isLoading) return <div></div>;
-    if (!systemInfo) return <div> Error fetching</div>;
+    if (!systemInfo) return <div> Error fetching </div>;
     return (
-        <div>
-            <pre>{JSON.stringify(systemInfo, null, 2)}</pre>
-            <ProgressBar
-                used={systemInfo.ramUsage.used}
-                total={systemInfo.ramUsage.total}
+        <div className="rounded-lg bg-zinc-800">
+            <HardwareBox
+                header={<span className="text-center font-bold">RAM</span>}
+                body={
+                    <div className="flex flex-col">
+                        <span>Total: {systemInfo.ramUsage.total}MB</span>
+                        <span>Used: {systemInfo.ramUsage.used}MB</span>
+                        <span>free: {systemInfo.ramUsage.free}MB</span>
+                        <span>active: {systemInfo.ramUsage.active}MB</span>
+                    </div>
+                }
+                progressBar={
+                    <ProgressBar
+                        key="RAM"
+                        used={systemInfo.ramUsage.used}
+                        total={systemInfo.ramUsage.total}
+                        unit="%"
+                    />
+                }
             />
-            {systemInfo.diskUsage.map((disk) => (
-                <ProgressBar used={disk.used} total={disk.total} />
+            {systemInfo.diskUsage.map((disk, index) => (
+                <HardwareBox
+                    header={
+                        <span className="text-center font-bold">
+                            Disk {index}
+                        </span>
+                    }
+                    body={
+                        <div className="flex flex-col">
+                            <span>Mounted at: {disk.mount}</span>
+                            <span>Total: {disk.total}GB</span>
+                            <span>Used: {disk.used}GB</span>
+                            <span>Used: {disk.available}GB</span>
+                        </div>
+                    }
+                    progressBar={
+                        <ProgressBar
+                            key="Disk"
+                            used={disk.used}
+                            total={disk.total}
+                            unit="%"
+                        />
+                    }
+                />
             ))}
-            <ProgressBar used={systemInfo.cpuTemperature.main} total={82} />
+            <HardwareBox
+                header={<span className="text-center font-bold">CPU</span>}
+                body={
+                    <div className="flex flex-col">
+                        <span>
+                            Temperature: {systemInfo.cpuTemperature.main}℃
+                        </span>
+                    </div>
+                }
+                progressBar={
+                    <ProgressBar
+                        key="CPU"
+                        used={systemInfo.cpuTemperature.main}
+                        total={100}
+                        unit="℃"
+                    />
+                }
+            />
         </div>
     );
 }
