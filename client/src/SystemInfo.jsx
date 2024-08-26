@@ -3,13 +3,21 @@ import React, { useState, useEffect } from 'react'
 function SystemInfo() {
     const [systemInfo, setSystemInfo] = useState(null);
     const [isLoading, setIsLoading] = useState(true)
-  
+    const [time, setTime] = useState(null);
+
+    useEffect(() => {
+      const id = setInterval(() => setTime(Date.now()), 5000);
+      return () => { clearInterval(id);
+      };
+
+    }, []);
+
     useEffect(() => {
       const fetchSystemInfo = async() => {
         try{
           const response = await fetch('http://raspberrypi:3000/api/system-info')
           const data = await response.json();
-          setSystemInfo(data);
+          setSystemInfo(data)
           setIsLoading(false);
         }
         catch(error) {
@@ -17,15 +25,14 @@ function SystemInfo() {
           setIsLoading(false);
         }
       };
-      fetchSystemInfo();
-    }, []);
+      fetchSystemInfo()
+    }, [time]);
     
     if (isLoading) return <div></div>
-    console.log(systemInfo)
     if (!systemInfo) return <div> Error fetching</div>
     return (
       <div>
-        <p>{systemInfo.ramUsage.total}</p>
+        <pre>{JSON.stringify(systemInfo, null, 2)}</pre>
       </div>
     )
   }
