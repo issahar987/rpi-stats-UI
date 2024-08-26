@@ -34,7 +34,7 @@ function SystemInfo() {
     if (isLoading) return <div></div>;
     if (!systemInfo) return <div> Error fetching </div>;
     return (
-        <div className="rounded-lg bg-zinc-800">
+        <div className="rounded-lg bg-[#124559]">
             <HardwareBox
                 header={<span className="text-center font-bold">RAM</span>}
                 body={
