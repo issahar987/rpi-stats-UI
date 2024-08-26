@@ -2,6 +2,7 @@ const express = require("express");
 const si = require("systeminformation");
 const app = express();
 const PORT = process.env.PORT || 3000;
+const cors = require("cors");
 
 // Function to check if a disk is a main disk
 function isMainDisk(disk) {
@@ -26,6 +27,13 @@ function bytestoMegaBytes(bytes) {
 function bytestoGigaBytes(bytes) {
     return (bytes / 1024 / 1024 / 1024).toFixed(2);
 }
+
+const corsOptions = {
+    origin: "http://raspberrypi:5173",
+    // optionSuccessStatus: 200,
+};
+
+app.use(cors(corsOptions));
 
 // Route to get system information
 app.get("/api/system-info", async (req, res) => {
