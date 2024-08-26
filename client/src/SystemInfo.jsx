@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import ProgressBar from './ProgressBar'
 
 function SystemInfo() {
     const [systemInfo, setSystemInfo] = useState(null);
@@ -33,6 +34,9 @@ function SystemInfo() {
     return (
       <div>
         <pre>{JSON.stringify(systemInfo, null, 2)}</pre>
+        <ProgressBar used={systemInfo.ramUsage.used} total={systemInfo.ramUsage.total}/>
+        {systemInfo.diskUsage.map((disk) => <ProgressBar used={disk.used} total={disk.total}/>)}
+        <ProgressBar used={systemInfo.cpuTemperature.main} total={82}/>
       </div>
     )
   }
